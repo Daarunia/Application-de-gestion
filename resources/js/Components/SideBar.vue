@@ -1,25 +1,27 @@
 <template>
     <div id="sidebar">
-        <header>
-            <a href="#">Douane Express</a>
+        <header class="d-flex align-items-center flex-column">
+            <h3 class="mt-5 mb-4" href="#">Douane Express</h3>
+            <div class="horizontal-line mb-4"></div>
         </header>
         <ul class="nav flex-column">
-            <li>
-                <a href="#">
-                    Services
-                </a>
+            <li class="mb-3">
+                <inertia-link href="/services">Services</inertia-link>
             </li>
-            <li>
-                <a href="#">
-                    Commandes
-                </a>
+            <li class="mb-3">
+                <inertia-link href="/commandes">Commandes</inertia-link>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
+import { InertiaLink  } from '@inertiajs/inertia-vue3';
+
 export default {
+    components: {
+        InertiaLink,
+    },
     name: 'SideBar',
     props: {
         name: String,
@@ -30,11 +32,11 @@ export default {
 <style>
 #sidebar {
     z-index: 1000;
-    position: fixed;
+    display: flex;
+    flex-direction: column;
     left: 250px;
     width: 250px;
     height: 100%;
-    margin-left: -250px;
     overflow-y: auto;
     background: #37474F;
     -webkit-transition: all 0.5s ease;
@@ -49,21 +51,16 @@ export default {
     text-align: center;
 }
 
-#sidebar header a {
+#sidebar header h3 {
     color: #fff;
     display: block;
-    text-decoration: none;
-}
-
-#sidebar header li:hover {
-    color: #fff;
 }
 
 #sidebar .nav a {
     background: none;
     color: #CFD8DC;
     font-size: 14px;
-    padding: 16px 24px;
+    margin-left: 24px;
     text-decoration: none;
 }
 
@@ -72,7 +69,9 @@ export default {
     color: #ECEFF1;
 }
 
-#sidebar .nav a i {
-    margin-right: 16px;
+.horizontal-line {
+    border-top: 1px solid white;
+    width: 60%;
+
 }
 </style>

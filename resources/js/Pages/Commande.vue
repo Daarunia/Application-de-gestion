@@ -1,7 +1,7 @@
 <template>
     <SideBar/>
     <div class="col-md-9">
-        <p>Commande</p>
+        <p>Commande {{ $page.props.name }}</p>
     </div>
 </template>
 
@@ -13,9 +13,9 @@ export default {
         SideBar,
     },
     name: 'Commande',
-    props: {
-        name: String,
-    },
+    mounted() {
+        console.log(this.$page.name);
+    }
 };
 </script>
 

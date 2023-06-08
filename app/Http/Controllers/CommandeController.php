@@ -8,12 +8,12 @@ use Inertia\Inertia;
 class CommandeController extends Controller
 {
     /**
-     * Show the application dashboard.
+     * Show the Commande view
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index() {
-        return Inertia::render('Commande', [
+        return Inertia::render('Commande',[
             'name' => 'Maxime'
         ]);
     }

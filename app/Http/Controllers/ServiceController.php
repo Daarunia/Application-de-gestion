@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Service;
 
 class ServiceController extends Controller
 {
@@ -12,9 +13,12 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index() {
+    public function index()
+    {
+        $services = Service::all();
+
         return Inertia::render('Service', [
-            'name' => 'Maxime'
+            'services' => $services,
         ]);
     }
 }
