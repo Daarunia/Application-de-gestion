@@ -19,10 +19,10 @@
 import { InertiaLink  } from '@inertiajs/inertia-vue3';
 
 export default {
+    name: 'SideBar',
     components: {
         InertiaLink,
     },
-    name: 'SideBar',
     props: {
         name: String,
     },

@@ -20,7 +20,7 @@
                         <button class="btn btn-primary">
                             <i class="fas fa-pencil"></i>
                         </button>
-                        <button class="btn btn-success ms-4">
+                        <button type="button" class="btn ms-4 btn-success">
                             <i class="fas fa-add"></i>
                         </button>
                         <button class="btn btn-danger ms-4">
@@ -35,14 +35,15 @@
 
 <script>
 import SideBar from '../Components/SideBar.vue';
+import ServiceModal from '../Components/ServiceModal.vue';
 
 export default {
     components: {
         SideBar,
+        ServiceModal
     },
     name: 'Service',
     props: {
-        name: String,
         services: {
             type: Array,
             default: () => [],
