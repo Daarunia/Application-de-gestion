@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Service;
+use Illuminate\Validation\Rule;
 
 class ServiceController extends Controller
 {
@@ -15,10 +16,40 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::all();
-
         return Inertia::render('Service', [
-            'services' => $services,
+            'services' => Service::all(),
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'reference' => [
+                'required',
+                Rule::unique('services')->ignore($request->id),
+            ],
+            'price' => 'required',
+        ]);
+
+        Service::create($request->validate([
+            'name' => ['required', 'max:50'],
+            'reference' => ['required', 'max:50'],
+            'price' => ['required', 'max:50'],
+        ]));
+
+        return redirect()->route('services');
+    }
+
+    public function update(Request $request, $id)
+    {
+        return redirect()->route('services');
+    }
+
+    public function destroy($id)
+    {
+        $service = Service::findOrFail($id);
+        $service->delete();
+        return redirect()->route('services');
     }
 }
