@@ -25,10 +25,10 @@ export default {
         };
     },
     methods: {
-        async submit() {
+        submitService() {
             try {
                 router.post('/services', this.form);
-                window.location.reload()
+                window.location.reload();
             } catch (error) {
                 console.error(error);
             }
@@ -41,7 +41,14 @@ export default {
                 console.error(error);
             }
         },
-    }
+        updateService() {
+            try {
+                router.put(`/services/${this.serviceId}`, this.form);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    },
 };
 </script>
 
@@ -60,7 +67,7 @@ export default {
                         <div class="modal-header">
                             <h5 class="modal-title" id="addModalLabel">Nouveau service</h5>
                         </div>
-                        <form id="add" @submit.prevent="submit">
+                        <form id="add" @submit.prevent="submitService">
                             <div class="modal-body">
                                 <label for="name" class="form-label">Nom</label>
                                 <input type="text" class="form-control" id="name" name="name" placeholder="Nom"
@@ -101,30 +108,30 @@ export default {
                         <button type="button" class="btn ms-4 btn-primary" data-bs-toggle="modal" data-bs-target="#update">
                             <i class="fas fa-pencil"></i>
                         </button>
-                        <div class="modal fade" id="update" tabindex="-1" aria-labelledby="addModal" aria-hidden="true">
+                        <div class="modal fade" id="update" tabindex="-1" aria-labelledby="addModal" aria-hidden="true" >
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="addModalLabel">Nouveau service</h5>
+                                        <h5 class="modal-title" id="addModalLabel">Modifier un service</h5>
                                     </div>
-                                    <div class="modal-body">
-                                        <form :id="'form-' + service.id">
+                                    <form :id="'form-' + service.id" @submit.prevent="updateService">
+                                        <div class="modal-body">
                                             <label for="name" class="form-label">Nom</label>
-                                            <input type="text" class="form-control" id="name" name="name"
-                                                :placeholder="service.name">
+                                            <input type="text" class="form-control" id="name" name="name" :placeholder="service.name"
+                                                v-model="form.name">
                                             <label for="reference" class="form-label mt-3">Référence</label>
                                             <input type="text" class="form-control" id="reference" name="reference"
-                                                :placeholder="service.reference">
+                                                :placeholder="service.reference" v-model="form.reference">
                                             <label for="price" class="form-label mt-3">Prix</label>
-                                            <input type="text" class="form-control" id="price" name="price"
-                                                :placeholder="service.price">
-                                        </form>
-                                    </div>
-                                    <div class="footer d-flex justify-content-end">
-                                        <button type="button" class="btn btn-secondary me-2 mb-2"
-                                            data-bs-dismiss="modal">Annuler</button>
-                                        <button class="btn btn-success me-2 mb-2" @click="consoleLog">Enregistrer</button>
-                                    </div>
+                                            <input type="text" class="form-control" id="price" name="price" placeholder="Prix"
+                                                :placeholder="service.price" v-model="form.price">
+                                        </div>
+                                        <div class="footer d-flex justify-content-end">
+                                            <button type="button" class="btn btn-secondary me-2 mb-2"
+                                                data-bs-dismiss="modal">Annuler</button>
+                                            <button type="submit" class="btn btn-success me-2 mb-2" data-bs-dismiss="modal">Enregistrer</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>

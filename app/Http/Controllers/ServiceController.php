@@ -43,6 +43,18 @@ class ServiceController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => ['required', 'max:50'],
+            'reference' => ['required', 'max:50'],
+            'price' => ['required', 'max:50'],
+        ]);
+
+        $service = Service::findOrFail($id);
+        $service->name = $request->input('name');
+        $service->reference = $request->input('reference');
+        $service->price = $request->input('price');
+        $service->save();
+
         return redirect()->route('services');
     }
 
