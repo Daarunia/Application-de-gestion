@@ -32,36 +32,37 @@ class ServiceController extends Controller
             'price' => 'required',
         ]);
 
-        Service::create($request->validate([
-            'name' => ['required', 'max:50'],
-            'reference' => ['required', 'max:50'],
-            'price' => ['required', 'max:50'],
-        ]));
+        Service::create($validatedData);
 
-        return redirect()->route('services');
+        return Inertia::render('Service', [
+            'services' => Service::all(),
+        ]);
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => ['required', 'max:50'],
             'reference' => ['required', 'max:50'],
             'price' => ['required', 'max:50'],
         ]);
 
         $service = Service::findOrFail($id);
-        $service->name = $request->input('name');
-        $service->reference = $request->input('reference');
-        $service->price = $request->input('price');
+        $service->fill($validatedData);
         $service->save();
 
-        return redirect()->route('services');
+        return Inertia::render('Service', [
+            'services' => Service::all(),
+        ]);
     }
 
     public function destroy($id)
     {
         $service = Service::findOrFail($id);
         $service->delete();
-        return redirect()->route('services');
+
+        return Inertia::render('Service', [
+            'services' => Service::all(),
+        ]);
     }
 }

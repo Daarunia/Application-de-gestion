@@ -1,18 +1,21 @@
 <template>
     <SideBar />
     <div class="col-md-9">
-        <p>Commande {{ $page.props.name }}</p>
+        <p>Commande</p>
     </div>
 </template>
 
 <script>
 import SideBar from '@/Components/SideBar.vue';
+import ServiceAddModal from '../Components/Modal/ServiceAddModal.vue';
 
 export default {
     name: 'Commande',
     components: {
-        SideBar,
-    },
+    SideBar,
+    ServiceAddModal,
+    ServiceAddModal
+},
 };
 </script>
 
