@@ -3,6 +3,8 @@ import { useForm } from '@inertiajs/vue3'
 import SideBar from '../Components/SideBar.vue';
 import ServiceAddModal from '../Components/Modal/ServiceAddModal.vue';
 import ServicePutModal from '../Components/Modal/ServicePutModal.vue';
+import moment from 'moment';
+
 
 export default {
     components: {
@@ -29,10 +31,13 @@ export default {
     methods: {
         deleteService(serviceId) {
             try {
-                this.$inertia.delete(`/services/${serviceId}`);
+                this.$inertia.delete(`/service/${serviceId}`);
             } catch (error) {
                 console.error(error);
             }
+        },
+        formatDate(date) {
+            return moment(date).format('DD/MM/YYYY HH:mm');
         },
     },
 };
@@ -52,9 +57,11 @@ export default {
         <table class="table">
             <thead>
                 <tr>
-                    <th>Reference</th>
-                    <th>Name</th>
-                    <th>Price</th>
+                    <th>Référence</th>
+                    <th>Nom</th>
+                    <th>Prix</th>
+                    <th>Date de création</th>
+                    <th>Date de mise à jour</th>
                     <th></th>
                 </tr>
             </thead>
@@ -63,6 +70,8 @@ export default {
                     <td class="align-middle">{{ service.reference }}</td>
                     <td class="align-middle">{{ service.name }}</td>
                     <td class="align-middle">{{ service.price }}</td>
+                    <td class="align-middle">{{ formatDate(service.created_at) }}</td>
+                    <td class="align-middle">{{ formatDate(service.updated_at) }}</td>
                     <td class="align-middle col-3">
                         <button type="button" class="btn ms-4 btn-primary" data-bs-toggle="modal"
                             :data-bs-target="'#put-' + service.id">
@@ -83,10 +92,6 @@ export default {
 .title-button {
     width: 40px;
     height: 40px;
-}
-
-.table {
-    width: 70%;
 }
 
 #app {

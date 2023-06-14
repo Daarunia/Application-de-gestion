@@ -21,6 +21,7 @@ class CommandeSeeder extends Seeder
             Commande::create([
                 'reference' => 'CMD-'.$faker->randomNumber(5),
                 'total' => $faker->randomFloat(2, 8, 100),
+                'status' => $faker->boolean
             ]);
         }
     }

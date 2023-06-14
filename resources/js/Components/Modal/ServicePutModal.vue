@@ -28,7 +28,7 @@ export default {
     methods: {
         submit() {
             try {
-                this.$inertia.put(`/services/${this.serviceId}`, this.form);
+                this.$inertia.put(`/service/${this.serviceId}`, this.form);
             } catch (error) {
                 console.error(error);
             }
