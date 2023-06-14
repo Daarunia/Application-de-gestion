@@ -14,9 +14,9 @@ return new class extends Migration
     {
         Schema::create('service_commande', function (Blueprint $table) {
             $table->id();
+            $table->integer('quantity');
             $table->foreignId('service_id')->constrained();
             $table->foreignId('commande_id')->constrained();
-            $table->timestamps();
         });
     }
 

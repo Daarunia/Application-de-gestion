@@ -54,7 +54,7 @@ export default {
             </button>
             <ServiceAddModal />
         </div>
-        <table class="table mt-3">
+        <table class="table table-service mt-3">
             <thead>
                 <tr>
                     <th>Référence</th>

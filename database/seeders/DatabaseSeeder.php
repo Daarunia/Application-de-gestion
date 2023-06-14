@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(ServiceSeeder::class);
         $this->call(CommandeSeeder::class);
+        $this->call(ServiceCommande::class);
     }
 }

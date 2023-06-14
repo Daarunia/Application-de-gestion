@@ -7,5 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Commande extends Model
 {
+    public function services()
+    {
+        return $this->belongsToMany(Service::class, 'service_commande')
+                    ->withPivot('quantity');
+    }
+
     use HasFactory;
 }

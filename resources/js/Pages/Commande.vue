@@ -1,11 +1,21 @@
 <script>
 import SideBar from '@/Components/SideBar.vue';
 import moment from 'moment';
+import CommandeGetModal from '../Components/Modal/CommandeGetModal.vue';
 
 export default {
     name: 'Commande',
     components: {
         SideBar,
+        CommandeGetModal
+    },
+    data() {
+        return {
+            data: {
+                type: Array,
+                default: () => [],
+            }
+        }
     },
     props: {
         commandes: {
@@ -17,6 +27,20 @@ export default {
         formatDate(date) {
             return moment(date).format('DD/MM/YYYY HH:mm');
         },
+        fetchData(commandeId) {
+            try {
+                axios.get(`/api/commande/${commandeId}`)
+                    .then(response => {
+                        this.data = response.data;
+                        console.log(this.data);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } catch (error) {
+                console.error(error);
+            }
+        }
     },
 };
 </script>
@@ -31,7 +55,7 @@ export default {
                 <i class="fas fa-add"></i>
             </button>
         </div>
-        <table class="table mt-3">
+        <table class="table table-commande mt-3">
             <thead>
                 <tr>
                     <th>Reference</th>
@@ -55,6 +79,11 @@ export default {
                         <button type="button" class="btn btn-danger ms-4">
                             <i class="fas fa-trash"></i>
                         </button>
+                        <button type="button" class="btn btn-info ms-4" data-bs-toggle="modal" data-bs-target="#get"
+                            @click="fetchData(commande.id)">
+                            <i class="fas fa-info-circle fa-inverse"></i>
+                        </button>
+                        <CommandeGetModal :data="this.data" />
                         <button v-if="!commande.status" type="button" class="btn ms-4 btn-primary">
                             <i class="fas fa-pencil"></i>
                         </button>
@@ -66,17 +95,7 @@ export default {
 </template>
 
 <style>
-#app {
-    display: flex;
-    height: 100%;
-}
-
-.content{
-    margin-left: 300px;
-}
-
-html, body {
-    height: 100%;
-    overflow-y: auto;
+.table-commande {
+    width: 80%;
 }
 </style>

@@ -20,4 +20,13 @@ class CommandeController extends Controller
             'commandes' => Commande::all(),
         ]);
     }
+
+    public function show($id)
+    {
+        $commande = Commande::findOrFail($id);
+        return response()->json([
+            'commande' => $commande,
+            'services' => $commande->services()->get(),
+        ]);
+    }
 }
