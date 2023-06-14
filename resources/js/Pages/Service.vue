@@ -45,7 +45,7 @@ export default {
 
 <template>
     <SideBar />
-    <div class="ms-5 mt-5 col-md-9">
+    <div class="mt-5 col-md-9 content">
         <div class="d-flex">
             <h1 class="ps-1">Services</h1>
             <button type="button" class="btn ms-4 btn-success align-items title-button" data-bs-toggle="modal"
@@ -54,7 +54,7 @@ export default {
             </button>
             <ServiceAddModal />
         </div>
-        <table class="table">
+        <table class="table mt-3">
             <thead>
                 <tr>
                     <th>Référence</th>
@@ -94,13 +94,19 @@ export default {
     height: 40px;
 }
 
+.content{
+    margin-left: 300px;
+}
+
 #app {
     display: flex;
     height: 100%;
 }
 
-html {
+html, body {
     height: 100%;
+    overflow-y: auto;
+
 }
 </style>
 

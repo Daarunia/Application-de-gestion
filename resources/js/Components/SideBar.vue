@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { InertiaLink  } from '@inertiajs/inertia-vue3';
+import { InertiaLink } from '@inertiajs/inertia-vue3';
 
 export default {
     name: 'SideBar',
@@ -31,13 +31,14 @@ export default {
 
 <style>
 #sidebar {
-    z-index: 1000;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
-    left: 250px;
     width: 250px;
-    height: 100%;
-    overflow-y: auto;
     background: #37474F;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;

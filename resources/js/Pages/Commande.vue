@@ -23,7 +23,7 @@ export default {
 
 <template>
     <SideBar />
-    <div class="ms-5 mt-5 col-md-9">
+    <div class="mt-5 col-md-9 content">
         <div class="d-flex">
             <h1 class="ps-1">Commandes</h1>
             <button type="button" class="btn ms-4 btn-success align-items title-button" data-bs-toggle="modal"
@@ -71,7 +71,12 @@ export default {
     height: 100%;
 }
 
-html {
+.content{
+    margin-left: 300px;
+}
+
+html, body {
     height: 100%;
+    overflow-y: auto;
 }
 </style>
