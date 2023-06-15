@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Commande;
+use App\Models\Service;
 
 
 class CommandeController extends Controller
@@ -18,6 +19,7 @@ class CommandeController extends Controller
     {
         return Inertia::render('Commande', [
             'commandes' => Commande::all(),
+            'services' => Service::all()
         ]);
     }
 

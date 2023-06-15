@@ -2,19 +2,22 @@
 import SideBar from '@/Components/SideBar.vue';
 import moment from 'moment';
 import CommandeGetModal from '../Components/Modal/CommandeGetModal.vue';
+import CommandeAddModal from '../Components/Modal/CommandeAddModal.vue';
+
 
 export default {
     name: 'Commande',
     components: {
         SideBar,
-        CommandeGetModal
+        CommandeGetModal,
+        CommandeAddModal
     },
     data() {
         return {
             data: {
                 type: Array,
                 default: () => [],
-            }
+            },
         }
     },
     props: {
@@ -22,6 +25,10 @@ export default {
             type: Array,
             default: () => [],
         },
+        services: {
+            type: Array,
+            default: () => [],
+        }
     },
     methods: {
         formatDate(date) {
@@ -40,6 +47,20 @@ export default {
             } catch (error) {
                 console.error(error);
             }
+        },
+        fetchServices() {
+            try {
+                axios.get(`/api/services`)
+                    .then(response => {
+                        this.services = response.data;
+                        console.log(this.services);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } catch (error) {
+                console.error(error);
+            }
         }
     },
 };
@@ -51,9 +72,10 @@ export default {
         <div class="d-flex">
             <h1 class="ps-1">Commandes</h1>
             <button type="button" class="btn ms-4 btn-success align-items title-button" data-bs-toggle="modal"
-                data-bs-target="#add">
+                data-bs-target="#add" @click="console.log(this.services)">
                 <i class="fas fa-add"></i>
             </button>
+            <CommandeAddModal :services="this.services"/>
         </div>
         <table class="table table-commande mt-3">
             <thead>
