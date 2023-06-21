@@ -48,20 +48,6 @@ export default {
                 console.error(error);
             }
         },
-        fetchServices() {
-            try {
-                axios.get(`/api/services`)
-                    .then(response => {
-                        this.services = response.data;
-                        console.log(this.services);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-            } catch (error) {
-                console.error(error);
-            }
-        }
     },
 };
 </script>
