@@ -17,9 +17,26 @@ class CommandeController extends Controller
      */
     public function index()
     {
+        $services = Service::all();
+        $serviceController = new ServiceController();
+        $serviceMapping = $serviceController->serviceMapping;
+
+        // Use the mapping: if the current reference exists in the mapping, replace it with the corresponding nickname.
+        foreach ($services as $service) {
+            $reference = $service['reference'];
+            foreach ($serviceMapping as $name => $references) {
+                if (in_array($reference, $references)) {
+                    $service['name'] = $name;
+                }
+            }
+        }
+
+        //To distinct services and avoid duplicates.
+        $uniqueServiceNames = $services->pluck('name')->unique();
+
         return Inertia::render('Commande', [
             'commandes' => Commande::all(),
-            'services' => Service::all()
+            'services' => $uniqueServiceNames,
         ]);
     }
 
