@@ -55,7 +55,7 @@ export default {
 
 <style>
 .grey-line {
-    border: solid 1px #6c757d;
+    border: solid 0.1px #6c757d;
 }
 
 .quantity-input{

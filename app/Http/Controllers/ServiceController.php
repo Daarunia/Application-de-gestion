@@ -93,8 +93,8 @@ class ServiceController extends Controller
                 $firstTransitPrice = Service::where('reference', $this->serviceMapping[$name][0])->first()->price;
                 $unitTransitPrice = Service::where('reference', $this->serviceMapping[$name][1])->first()->price;
 
-                if ($quantity == $this->transitTiers[0]) {
-                    return response()->json(['price' => (int) $firstTransitPrice]);
+                if ($quantity <= $this->transitTiers[0]) {
+                    return response()->json(['price' => (int) $firstTransitPrice * $quantity]);
                 } else {
                     return response()->json(['price' => (int) $firstTransitPrice + $unitTransitPrice * ($quantity - $this->transitTiers[0])]);
                 }
