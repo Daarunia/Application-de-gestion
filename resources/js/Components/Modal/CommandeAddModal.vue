@@ -4,7 +4,7 @@ import { useForm } from '@inertiajs/vue3';
 export default {
     name: 'CommandeAddModal',
     props: {
-        services: {
+        servicesName: {
             type: Object,
             required: true,
             default: null
@@ -12,6 +12,7 @@ export default {
     },
     data() {
         return {
+            services: [],
             form: useForm({
                 name: '',
                 reference: '',
@@ -24,17 +25,33 @@ export default {
         fetchPrice(serviceName, quantity) {
             try {
                 let encodedServiceName = serviceName.replace(/\//g, "|");
-                axios.get(`/api/service/${encodedServiceName}/${quantity}`)
+                const existingIndex = this.services.findIndex(service => service.name === serviceName);
+
+                // If the service has not been added to the command, we create it otherwise, we update the quantity and the price.
+                if (existingIndex === -1) {
+                    axios.get(`/api/service/${encodedServiceName}/${quantity}`)
                     .then(response => {
+                        this.services.push({ name: serviceName, quantity, price: parseFloat(response.data.price)});
                         this.price += parseFloat(response.data.price);
-                        console.log(this.price);
                     })
                     .catch(error => {
                         console.log(error);
                     });
+                } else {
+                    this.services[existingIndex].quantity += quantity;
+                    axios.get(`/api/service/${encodedServiceName}/${this.services[existingIndex].quantity}`)
+                    .then(response => {
+                        this.services[existingIndex].price = parseFloat(response.data.price);
+                        this.price = parseFloat(response.data.price);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                }
             } catch (error) {
                 console.error(error);
             }
+            console.log(this.services);
         },
     },
 }
@@ -50,7 +67,7 @@ export default {
                 <div class="modal-padding modal-body modal-add-min-height">
                     <div class="d-flex align-items-center justify-content-center mt-2 b-2">
                         <select class="ms-3 form-select" v-model="selectedService">
-                            <option v-for="service in services">{{ service }}</option>
+                            <option v-for="service in servicesName">{{ service }}</option>
                         </select>
                         <button type="button" class="btn btn-success ms-4 me-4" @click="fetchPrice(selectedService, 1)">
                             <i class="fas fa-add"></i>
