@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('reference')->unique();
             $table->boolean('status');
+            $table->date('date');
             $table->decimal('total', 8, 2);
             $table->timestamps();
         });
