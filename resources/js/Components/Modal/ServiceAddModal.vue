@@ -5,11 +5,11 @@ export default {
     name: 'ServiceAddModal',
     data() {
         return {
-            form: useForm({
+            form: {
                 name: '',
                 reference: '',
                 price: '',
-            }),
+            },
         };
     },
     methods: {

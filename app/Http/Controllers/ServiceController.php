@@ -16,11 +16,11 @@ class ServiceController extends Controller
         'Impression de documents' => ['DOU014', 'DOU015', 'DOU016'],
     ];
 
-    private $transitTiers = [
+    public $transitTiers = [
         1,
     ];
 
-    private $printingTiers = [
+    public $printingTiers = [
         10,
         20
     ];
@@ -120,5 +120,26 @@ class ServiceController extends Controller
             }
         }
         return response()->json(['error' => 'Invalid service'], 400);
+    }
+
+    /**
+     * Return the unique name of all services.
+     */
+    public function getNomServices()
+    {
+        $services = Service::all();
+
+        // Use the mapping: if the current reference exists in the mapping, replace it with the corresponding nickname.
+        foreach ($services as $service) {
+            $reference = $service['reference'];
+            foreach ($this->serviceMapping as $name => $references) {
+                if (in_array($reference, $references)) {
+                    $service['name'] = $name;
+                }
+            }
+        }
+
+        //To distinct services and avoid duplicates.
+        return $services->pluck('name')->unique();
     }
 }

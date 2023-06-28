@@ -61,7 +61,7 @@ export default {
                 data-bs-target="#add" @click="console.log(this.services)">
                 <i class="fas fa-add"></i>
             </button>
-            <CommandeAddModal :servicesName="this.services"/>
+            <CommandeAddModal :servicesName="this.services" />
         </div>
         <table class="table table-commande mt-3">
             <thead>

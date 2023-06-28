@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Commande;
-use App\Models\Service;
+use App\Http\Controllers\ServiceController;
 
 
 class CommandeController extends Controller
@@ -15,28 +15,11 @@ class CommandeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(ServiceController $serviceController)
     {
-        $services = Service::all();
-        $serviceController = new ServiceController();
-        $serviceMapping = $serviceController->serviceMapping;
-
-        // Use the mapping: if the current reference exists in the mapping, replace it with the corresponding nickname.
-        foreach ($services as $service) {
-            $reference = $service['reference'];
-            foreach ($serviceMapping as $name => $references) {
-                if (in_array($reference, $references)) {
-                    $service['name'] = $name;
-                }
-            }
-        }
-
-        //To distinct services and avoid duplicates.
-        $uniqueServiceNames = $services->pluck('name')->unique();
-
         return Inertia::render('Commande', [
             'commandes' => Commande::all(),
-            'services' => $uniqueServiceNames,
+            'services' => $serviceController->getNomServices(),
         ]);
     }
 
@@ -48,4 +31,45 @@ class CommandeController extends Controller
             'services' => $commande->services()->get(),
         ]);
     }
+
+    public function store(Request $request, ServiceController $serviceController)
+    {
+        $validatedData = $request->validate([
+            'categories' => 'required|array',
+            'totalPrice' => 'required|numeric',
+            'commandDate' => 'required|date',
+        ]);
+
+        // Generate the new reference
+        $lastReference = Commande::max('reference');
+        if ($lastReference) {
+            $referenceNumber = intval(substr($lastReference, 4)) + 1;
+        } else {
+            $referenceNumber = 1;
+        }
+        $newReference = 'CMD-' . str_pad($referenceNumber, 5, '0', STR_PAD_LEFT);
+
+        // Create the new command
+        $command = Commande::create([
+            'total' => $validatedData['totalPrice'],
+            'date' => $validatedData['commandDate'],
+            'status' => true,
+            'reference' => $newReference,
+        ]);
+
+        // Save the quantities in the pivot table
+        //$categories = $request->input('categories');
+        //foreach ($categories as $categoryId => $quantity) {
+        //    $command->categories()->attach($categoryId, ['quantity' => $quantity]);
+       // }
+
+        return Inertia::render('Commande', [
+            'commandes' => Commande::all(),
+            'services' => $serviceController->getNomServices(),
+        ]);
+    }
+
+    /**
+     * Return the id of each service
+     */
 }

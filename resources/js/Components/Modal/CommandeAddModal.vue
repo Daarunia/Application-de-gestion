@@ -1,7 +1,7 @@
 <script>
-import { useForm } from '@inertiajs/vue3';
 import FlatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
+import { ref } from 'vue';
 
 export default {
     name: 'CommandeAddModal',
@@ -18,10 +18,31 @@ export default {
     data() {
         return {
             services: [],
+            date: ref('2023-06-28'),
             isAddingService: false,
+            form: {
+                categories: [],
+                totalPrice: 0,
+                commandDate: null,
+            },
         };
     },
     methods: {
+        createCommand() {
+            this.form.categories = this.services,
+            this.form.totalPrice = this.totalPrice(),
+            this.form.commandDate = this.date
+
+            try {
+                this.$inertia.post('/commandes', this.form);
+
+                // Re-init
+                this.services = [];
+                this.date = ref('2023-06-28');
+            } catch (error) {
+                console.log(error);
+            }
+        },
         totalPrice() {
             return this.services.reduce((total, service) => total + service.price, 0);
         },
@@ -37,14 +58,12 @@ export default {
 
                     this.services.push({ name: serviceName, quantity, price: parseFloat(response.data.price) });
                     this.isAddingService = false;
-                    console.log(this.services);
                 } else {
                     this.services[existingIndex].quantity += quantity;
                     let response = await this.updatePrice(serviceName, this.services[existingIndex].quantity)
 
                     this.services[existingIndex].price = parseFloat(response.data.price);
                     this.isAddingService = false;
-                    console.log(this.services);
                 }
             } catch (error) {
                 console.error(error);
@@ -83,7 +102,7 @@ export default {
             }
         },
         // Delete a specific service type from the services array for the current new command.
-        deleteService(service){
+        deleteService(service) {
             this.services.splice(this.services.findIndex(services => services.name === service.name), 1);
             this.totalPrice();
         }
@@ -104,7 +123,7 @@ export default {
                         <div class="horizontal-line grey-line mb-2"></div>
                         <div class="d-flex align-items-center flex-row ms-2">
                             <label class="me-4">Date de commande :</label>
-                            <flat-pickr class="form-control text-center w-50"></flat-pickr>
+                            <flat-pickr class="form-control text-center w-50" v-model="date"></flat-pickr>
                         </div>
                         <h5 class="mt-3">Services</h5>
                         <div class="horizontal-line grey-line mb-2"></div>
@@ -136,7 +155,8 @@ export default {
                 <div class="footer pt-2 footer-ligne d-flex justify-content-end align-items-center mb-2">
                     <label class="me-4">Prix :</label>
                     <input type="number" class="form-control w-25" readonly :value=totalPrice()>
-                    <button type="button" class="btn btn-success ms-2" data-bs-dismiss="modal">Enregistrer</button>
+                    <button type="button" class="btn btn-success ms-2" data-bs-dismiss="modal"
+                        @click.prevent="createCommand()">Enregistrer</button>
                     <button type="button" class="btn btn-danger ms-2 me-2" data-bs-dismiss="modal">Fermer</button>
                 </div>
             </div>
