@@ -1,8 +1,13 @@
 <script>
 import { useForm } from '@inertiajs/vue3';
+import FlatPickr from 'vue-flatpickr-component';
+import 'flatpickr/dist/flatpickr.css';
 
 export default {
     name: 'CommandeAddModal',
+    components: {
+        FlatPickr
+    },
     props: {
         servicesName: {
             type: Object,
@@ -14,11 +19,6 @@ export default {
         return {
             services: [],
             isAddingService: false,
-            form: useForm({
-                name: '',
-                reference: '',
-                price: '',
-            }),
         };
     },
     methods: {
@@ -37,24 +37,24 @@ export default {
 
                     this.services.push({ name: serviceName, quantity, price: parseFloat(response.data.price) });
                     this.isAddingService = false;
+                    console.log(this.services);
                 } else {
                     this.services[existingIndex].quantity += quantity;
                     let response = await this.updatePrice(serviceName, this.services[existingIndex].quantity)
 
                     this.services[existingIndex].price = parseFloat(response.data.price);
                     this.isAddingService = false;
+                    console.log(this.services);
                 }
             } catch (error) {
                 console.error(error);
             }
-            console.log(this.services);
         },
         // For incrementing the quantity of the service by 1
         async decreaseQuantity(service) {
             if (service.quantity > 0) {
                 service.quantity--;
                 await this.handleQuantityChange(service);
-                console.log(this.service);
             }
         },
         // For decrementing the quantity of the service by 1
@@ -62,7 +62,6 @@ export default {
             if (service.quantity < 999) {
                 service.quantity++;
                 await this.handleQuantityChange(service);
-                console.log(this.service);
             }
         },
         // Update the quantity of a service
@@ -71,6 +70,7 @@ export default {
 
             let response = await this.updatePrice(service.name, service.quantity)
             this.services[indexNumber].price = parseFloat(response.data.price);
+            console.log(this.services);
         },
         // Update the price accordingly when manually changing the quantity input of a service
         async updatePrice(serviceName, quantity) {
@@ -81,6 +81,11 @@ export default {
                 console.log(error);
                 throw error;
             }
+        },
+        // Delete a specific service type from the services array for the current new command.
+        deleteService(service){
+            this.services.splice(this.services.findIndex(services => services.name === service.name), 1);
+            this.totalPrice();
         }
     },
 }
@@ -95,6 +100,12 @@ export default {
                 </div>
                 <div class="modal-padding modal-body modal-add-min-height">
                     <div class="d-flex align-items-start flex-column justify-content-between ms-3 mb-3">
+                        <h5 class="mt-3">Date</h5>
+                        <div class="horizontal-line grey-line mb-2"></div>
+                        <div class="d-flex align-items-center flex-row ms-2">
+                            <label class="me-4">Date de commande :</label>
+                            <flat-pickr class="form-control text-center w-50"></flat-pickr>
+                        </div>
                         <h5 class="mt-3">Services</h5>
                         <div class="horizontal-line grey-line mb-2"></div>
                         <div class="d-flex align-items-start flex-row mb-1 ms-2 mt-1 w-100" v-for="service in services">
@@ -107,6 +118,9 @@ export default {
                                 <button class="btn btn-outline-secondary" type="button"
                                     @click="increaseQuantity(service)">+</button>
                             </div>
+                            <button type="button" class="btn btn-danger ms-4" @click="deleteService(service)">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="d-flex align-items-center justify-content-center mt-2 ms-3 mb-2">

@@ -2,11 +2,10 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite",
+        "dev": "set DEBUG=vite:* && vite",
         "build": "vite build"
     },
     "devDependencies": {
-        "@popperjs/core": "^2.11.6",
         "@vitejs/plugin-vue": "^4.2.3",
         "axios": "^1.4.0",
         "bootstrap": "^5.2.3",
@@ -21,6 +20,9 @@
         "@inertiajs/vue3": "^1.0.7",
         "@vue/compiler-sfc": "^3.3.4",
         "@vue/runtime-core": "^3.3.4",
-        "moment": "^2.29.4"
+        "flatpickr": "^4.6.13",
+        "moment": "^2.29.4",
+        "v-calendar": "^3.0.3",
+        "vue-flatpickr-component": "^11.0.3"
     }
 }
