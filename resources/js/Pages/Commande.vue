@@ -28,7 +28,7 @@ export default {
         services: {
             type: Array,
             default: () => [],
-        }
+        },
     },
     methods: {
         formatDate(date) {
@@ -39,7 +39,6 @@ export default {
                 axios.get(`/api/commande/${commandeId}`)
                     .then(response => {
                         this.data = response.data;
-                        console.log(this.data);
                     })
                     .catch(error => {
                         console.log(error);
@@ -58,7 +57,7 @@ export default {
         <div class="d-flex">
             <h1 class="ps-1">Commandes</h1>
             <button type="button" class="btn ms-4 btn-success align-items title-button" data-bs-toggle="modal"
-                data-bs-target="#add" @click="console.log(this.services)">
+                data-bs-target="#add">
                 <i class="fas fa-add"></i>
             </button>
             <CommandeAddModal :servicesName="this.services" />

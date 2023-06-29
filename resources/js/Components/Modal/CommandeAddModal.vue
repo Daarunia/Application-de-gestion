@@ -35,7 +35,7 @@ export default {
 
             try {
                 this.$inertia.post('/commandes', this.form);
-
+                console.log(this.form);
                 // Re-init
                 this.services = [];
                 this.date = ref('2023-06-28');

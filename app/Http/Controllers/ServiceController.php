@@ -12,17 +12,8 @@ class ServiceController extends Controller
     // The price changes with the quantity, you need to check the controllers to modify the quantity calculation.
     // don't change the reference order for quantity calculation.
     public $serviceMapping = [
-        'Notification de transit' => ['DOU002', 'DOU003'],
-        'Impression de documents' => ['DOU014', 'DOU015', 'DOU016'],
-    ];
-
-    public $transitTiers = [
-        1,
-    ];
-
-    public $printingTiers = [
-        10,
-        20
+        'Notification de transit' => ['DOU002' => 1, 'DOU003' => null],
+        'Impression de documents' => ['DOU014' => 10, 'DOU015' => 20, 'DOU016' => null],
     ];
 
     /**
@@ -82,34 +73,31 @@ class ServiceController extends Controller
         ]);
     }
 
-    //API function that returns the price, for each service.
+    /**
+     * API function that returns the price, for each service.
+     */
     public function getPrice($name, $quantity)
     {
         // decoded name
         $name = str_replace('|', '/', $name);
         // Check if the name is present in the mapper for exceptional cases.
         if (array_key_exists($name, $this->serviceMapping)) {
-            if ($name === 'Notification de transit') {
-                $firstTransitPrice = Service::where('reference', $this->serviceMapping[$name][0])->first()->price;
-                $unitTransitPrice = Service::where('reference', $this->serviceMapping[$name][1])->first()->price;
+            $total = 0;
+            $remainingUnits = $quantity;
+            $totalValue = 0;
 
-                if ($quantity <= $this->transitTiers[0]) {
-                    return response()->json(['price' => (int) $firstTransitPrice * $quantity]);
-                } else {
-                    return response()->json(['price' => (int) $firstTransitPrice + $unitTransitPrice * ($quantity - $this->transitTiers[0])]);
-                }
-            } elseif ($name === 'Impression de documents') {
-                $firstPrintingPrice = Service::where('reference', $this->serviceMapping[$name][0])->first()->price;
-                $secondPrintingPrice = Service::where('reference', $this->serviceMapping[$name][1])->first()->price;
-                $unitPrintingPrice = Service::where('reference', $this->serviceMapping[$name][2])->first()->price;
+            foreach($this->serviceMapping[$name] as $key => $value){
+                $service = Service::where('reference', $key)->first();
 
-                if ($quantity <= $this->printingTiers[0]) {
-                    return response()->json(['price' => (int) $firstPrintingPrice * $quantity]);
-                } elseif($quantity >= 11 && $quantity <= $this->printingTiers[1]){
-                    return response()->json(['price' => (int) $firstPrintingPrice * $this->printingTiers[0] + $secondPrintingPrice * ($quantity - $this->printingTiers[0])]);
+                if($quantity <= $value || $value === null){
+                    $total += $remainingUnits * $service->price;
+                    return response()->json(['price' => $total]);
                 } else {
-                    return response()->json(['price' => (int) $firstPrintingPrice * $this->printingTiers[0] + $secondPrintingPrice * $this->printingTiers[0] + $unitPrintingPrice * ($quantity - $this->printingTiers[1])]);
+                    $total += ($value - $totalValue) * $service->price;
+                    error_log('total :'.$total.'  value : '.$value.'  price :'.$service->price);
+                    $remainingUnits = $quantity - $value;
                 }
+                $totalValue += $value;
             }
         } else {
             $service = Service::where('name', $name)->first();
@@ -133,13 +121,22 @@ class ServiceController extends Controller
         foreach ($services as $service) {
             $reference = $service['reference'];
             foreach ($this->serviceMapping as $name => $references) {
-                if (in_array($reference, $references)) {
+                if (array_key_exists($reference, $references)) {
                     $service['name'] = $name;
+                    break;
                 }
             }
         }
 
         //To distinct services and avoid duplicates.
         return $services->pluck('name')->unique();
+    }
+
+    /**
+     * Return the id of each service with the quantity
+     */
+    public function getServicesId($categories)
+    {
+
     }
 }

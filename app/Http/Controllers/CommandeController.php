@@ -50,26 +50,21 @@ class CommandeController extends Controller
         $newReference = 'CMD-' . str_pad($referenceNumber, 5, '0', STR_PAD_LEFT);
 
         // Create the new command
-        $command = Commande::create([
+        $commande = Commande::create([
             'total' => $validatedData['totalPrice'],
             'date' => $validatedData['commandDate'],
             'status' => true,
             'reference' => $newReference,
         ]);
 
-        // Save the quantities in the pivot table
-        //$categories = $request->input('categories');
-        //foreach ($categories as $categoryId => $quantity) {
-        //    $command->categories()->attach($categoryId, ['quantity' => $quantity]);
-       // }
+        //foreach ($validatedData['categories'] as $key => $value) {
+        //    $serviceId = $serviceController->getServicesId($value['name'], $value['quantity']);
+        //    $validatedData['categories']['id'] = $serviceId;
+        //}
 
         return Inertia::render('Commande', [
             'commandes' => Commande::all(),
             'services' => $serviceController->getNomServices(),
         ]);
     }
-
-    /**
-     * Return the id of each service
-     */
 }
