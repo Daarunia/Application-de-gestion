@@ -13,5 +13,11 @@ class Service extends Model
         'price'
     ];
 
+    public function commandes()
+    {
+        return $this->belongsToMany(Commande::class, 'service_commande')
+                    ->withPivot('quantity');
+    }
+
     use HasFactory;
 }

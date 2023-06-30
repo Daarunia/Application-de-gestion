@@ -86,15 +86,14 @@ class ServiceController extends Controller
             $remainingUnits = $quantity;
             $totalValue = 0;
 
-            foreach($this->serviceMapping[$name] as $key => $value){
+            foreach ($this->serviceMapping[$name] as $key => $value) {
                 $service = Service::where('reference', $key)->first();
 
-                if($quantity <= $value || $value === null){
+                if ($quantity <= $value || $value === null) {
                     $total += $remainingUnits * $service->price;
                     return response()->json(['price' => $total]);
                 } else {
                     $total += ($value - $totalValue) * $service->price;
-                    error_log('total :'.$total.'  value : '.$value.'  price :'.$service->price);
                     $remainingUnits = $quantity - $value;
                 }
                 $totalValue += $value;
@@ -135,8 +134,27 @@ class ServiceController extends Controller
     /**
      * Return the id of each service with the quantity
      */
-    public function getServicesId($categories)
+    public function getServicesId($name, $quantity)
     {
+        if (array_key_exists($name, $this->serviceMapping)) {
+            $remainingUnits = $quantity;
+            $servicesId = [];
 
+            foreach ($this->serviceMapping[$name] as $key => $value) {
+                $service = Service::where('reference', $key)->first();
+
+                if ($quantity < $value) {
+                    $servicesId[$service->id] = $remainingUnits;
+                } else {
+                    $servicesId[$service->id] = $value;
+                    $remainingUnits = $quantity - $value;
+                }
+            }
+
+            return $servicesId;
+        } else {
+            $service = Service::where('name', $name)->first();
+            return $servicesId[$service->id] = $quantity;
+        }
     }
 }
