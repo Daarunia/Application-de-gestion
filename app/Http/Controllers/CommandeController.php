@@ -58,13 +58,12 @@ class CommandeController extends Controller
         ]);
 
         // Add the quantity for each service in the pivot table for the current new command.
-        //foreach ($validatedData['categories'] as $key => $value) {
-        //    $serviceId = $serviceController->getServicesId($value['name'], $value['quantity']);
-        //    $validatedData['categories']['id'] = $serviceId;
-        //}
-
-        $serviceId = $serviceController->getServicesId('Impression de documents', 21);
-        error_log(json_encode($serviceId));
+        foreach ($validatedData['categories'] as $key => $value) {
+            $serviceId = $serviceController->getServicesId($value['name'], $value['quantity']);
+            foreach ($serviceId as $id => $quantity) {
+                $commande->services()->attach($id, ['quantity' => $quantity]);
+            }
+        }
 
         return Inertia::render('Commande', [
             'commandes' => Commande::all(),

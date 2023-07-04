@@ -143,18 +143,18 @@ class ServiceController extends Controller
             foreach ($this->serviceMapping[$name] as $key => $value) {
                 $service = Service::where('reference', $key)->first();
 
-                if ($quantity < $value) {
+                if ($quantity < $value || $value === null) {
                     $servicesId[$service->id] = $remainingUnits;
+                    return $servicesId;
                 } else {
                     $servicesId[$service->id] = $value;
                     $remainingUnits = $quantity - $value;
                 }
             }
-
-            return $servicesId;
         } else {
             $service = Service::where('name', $name)->first();
-            return $servicesId[$service->id] = $quantity;
+            $servicesId[$service->id] = $quantity;
+            return $servicesId;
         }
     }
 }
