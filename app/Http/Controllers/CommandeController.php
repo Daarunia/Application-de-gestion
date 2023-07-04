@@ -72,7 +72,6 @@ class CommandeController extends Controller
         // Add the quantity for each service in the pivot table for the current new command.
         foreach ($validatedData['categories'] as $key => $value) {
             $serviceId = $serviceController->getServicesId($value['name'], $value['quantity']);
-            error_log(json_encode($serviceId));
             foreach ($serviceId as $id => $quantity) {
                 $commande->services()->attach($id, ['quantity' => $quantity]);
             }
@@ -85,7 +84,7 @@ class CommandeController extends Controller
     }
 
     /**
-     * API function for the update command modal
+     * API function who fetch de data for the update command modal
      */
     public function getDataUpdate(ServiceController $serviceController, $id)
     {
@@ -102,12 +101,17 @@ class CommandeController extends Controller
                         $commandeData[$name] = $service['pivot']['quantity'];
                     }
                 } else {
+                    if (isset($commandeData[$name])) {
+                        $commandeData[$name] = $service['pivot']['quantity'];
+                    }
                 }
             }
         }
 
         return response()->json([
             'services' => $commandeData,
+            'total' => $commande->total,
+            'date' => $commande->date
         ]);
     }
 }
