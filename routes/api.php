@@ -21,7 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Fetch command data
-Route::get('/commande/{id}', [CommandeController::class, 'show'])->name('commande.show');
+Route::get('/commande/details/{id}', [CommandeController::class, 'show'])->name('commande.show');
+Route::get('/commande/update/{id}', [CommandeController::class, 'getDataUpdate'])->name('commande.update-data');
 
 // Get price for each service and quantity
 Route::get('service/{name}/{quantity}', [ServiceController::class, 'getPrice'])->name('service.price');

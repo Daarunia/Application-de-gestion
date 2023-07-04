@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Commande;
 use App\Http\Controllers\ServiceController;
-
+use Error;
 
 class CommandeController extends Controller
 {
@@ -19,7 +19,7 @@ class CommandeController extends Controller
     {
         return Inertia::render('Commande', [
             'commandes' => Commande::all(),
-            'services' => $serviceController->getNomServices(),
+            'services' => $serviceController->getNameServices(),
         ]);
     }
 
@@ -31,7 +31,7 @@ class CommandeController extends Controller
 
         return Inertia::render('Commande', [
             'commandes' => Commande::all(),
-            'services' => $serviceController->getNomServices(),
+            'services' => $serviceController->getNameServices(),
         ]);
     }
 
@@ -72,6 +72,7 @@ class CommandeController extends Controller
         // Add the quantity for each service in the pivot table for the current new command.
         foreach ($validatedData['categories'] as $key => $value) {
             $serviceId = $serviceController->getServicesId($value['name'], $value['quantity']);
+            error_log(json_encode($serviceId));
             foreach ($serviceId as $id => $quantity) {
                 $commande->services()->attach($id, ['quantity' => $quantity]);
             }
@@ -79,7 +80,34 @@ class CommandeController extends Controller
 
         return Inertia::render('Commande', [
             'commandes' => Commande::all(),
-            'services' => $serviceController->getNomServices(),
+            'services' => $serviceController->getNameServices(),
+        ]);
+    }
+
+    /**
+     * API function for the update command modal
+     */
+    public function getDataUpdate(ServiceController $serviceController, $id)
+    {
+        $commande = Commande::findOrFail($id);
+        $services = $commande->services()->get();
+        $commandeData = [];
+
+        foreach ($services as $service) {
+            foreach ($serviceController->serviceMapping as $name => $references) {
+                if (array_key_exists($service['reference'], $references)) {
+                    if (isset($commandeData[$name])) {
+                        $commandeData[$name] += $service['pivot']['quantity'];
+                    } else {
+                        $commandeData[$name] = $service['pivot']['quantity'];
+                    }
+                } else {
+                }
+            }
+        }
+
+        return response()->json([
+            'services' => $commandeData,
         ]);
     }
 }

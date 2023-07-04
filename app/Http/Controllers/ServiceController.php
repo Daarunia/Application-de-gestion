@@ -112,7 +112,7 @@ class ServiceController extends Controller
     /**
      * Return the unique name of all services.
      */
-    public function getNomServices()
+    public function getNameServices()
     {
         $services = Service::all();
 
@@ -138,6 +138,7 @@ class ServiceController extends Controller
     {
         if (array_key_exists($name, $this->serviceMapping)) {
             $remainingUnits = $quantity;
+            $totalValue = 0;
             $servicesId = [];
 
             foreach ($this->serviceMapping[$name] as $key => $value) {
@@ -147,9 +148,10 @@ class ServiceController extends Controller
                     $servicesId[$service->id] = $remainingUnits;
                     return $servicesId;
                 } else {
-                    $servicesId[$service->id] = $value;
+                    $servicesId[$service->id] = $value - $totalValue;
                     $remainingUnits = $quantity - $value;
                 }
+                $totalValue += $value;
             }
         } else {
             $service = Service::where('name', $name)->first();

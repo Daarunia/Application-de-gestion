@@ -3,6 +3,7 @@ import SideBar from '@/Components/SideBar.vue';
 import moment from 'moment';
 import CommandeGetModal from '../Components/Modal/CommandeGetModal.vue';
 import CommandeAddModal from '../Components/Modal/CommandeAddModal.vue';
+import CommandePutModal from '../Components/Modal/CommandePutModal.vue';
 
 
 export default {
@@ -10,7 +11,8 @@ export default {
     components: {
         SideBar,
         CommandeGetModal,
-        CommandeAddModal
+        CommandeAddModal,
+        CommandePutModal
     },
     data() {
         return {
@@ -43,7 +45,7 @@ export default {
         },
         fetchData(commandeId) {
             try {
-                axios.get(`/api/commande/${commandeId}`)
+                axios.get(`/api/commande/details/${commandeId}`)
                     .then(response => {
                         this.data = response.data;
                     })
@@ -98,9 +100,11 @@ export default {
                             <i class="fas fa-info-circle fa-inverse"></i>
                         </button>
                         <CommandeGetModal :data="this.data" />
-                        <button v-if="!commande.status" type="button" class="btn ms-4 btn-primary">
+                        <button v-if="!commande.status" type="button" class="btn ms-4 btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#put">
                             <i class="fas fa-pencil"></i>
                         </button>
+                        <CommandePutModal :data="this.data"/>
                     </td>
                 </tr>
             </tbody>
