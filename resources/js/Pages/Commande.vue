@@ -34,6 +34,13 @@ export default {
         formatDate(date) {
             return moment(date).format('DD/MM/YYYY HH:mm');
         },
+        deleteCommande(commandeId) {
+            try {
+                this.$inertia.delete(`/commande/${commandeId}`);
+            } catch (error) {
+                console.error(error);
+            }
+        },
         fetchData(commandeId) {
             try {
                 axios.get(`/api/commande/${commandeId}`)
@@ -83,7 +90,7 @@ export default {
                         <i :class="commande.status ? 'fas fa-lock text-danger' : 'fas fa-unlock text-success'"></i>
                     </td>
                     <td class="align-middle col-3">
-                        <button type="button" class="btn btn-danger ms-4">
+                        <button type="button" class="btn btn-danger ms-4" @click="deleteCommande(commande.id)">
                             <i class="fas fa-trash"></i>
                         </button>
                         <button type="button" class="btn btn-info ms-4" data-bs-toggle="modal" data-bs-target="#get"

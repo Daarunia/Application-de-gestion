@@ -23,6 +23,18 @@ class CommandeController extends Controller
         ]);
     }
 
+    public function destroy(ServiceController $serviceController, $id)
+    {
+        $commande = Commande::findOrFail($id);
+        $commande->services()->detach();
+        $commande->delete();
+
+        return Inertia::render('Commande', [
+            'commandes' => Commande::all(),
+            'services' => $serviceController->getNomServices(),
+        ]);
+    }
+
     public function show($id)
     {
         $commande = Commande::findOrFail($id);
