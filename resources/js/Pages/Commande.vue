@@ -43,9 +43,22 @@ export default {
                 console.error(error);
             }
         },
-        fetchData(commandeId) {
+        fetchGetData(commandeId) {
             try {
                 axios.get(`/api/commande/details/${commandeId}`)
+                    .then(response => {
+                        this.data = response.data;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        fetchUpdateData(commandeId) {
+            try {
+                axios.get(`/api/commande/update/${commandeId}`)
                     .then(response => {
                         this.data = response.data;
                     })
@@ -96,7 +109,7 @@ export default {
                             <i class="fas fa-trash"></i>
                         </button>
                         <button type="button" class="btn btn-info ms-4" data-bs-toggle="modal" data-bs-target="#get"
-                            @click="fetchData(commande.id)">
+                            @click="fetchGetData(commande.id)">
                             <i class="fas fa-info-circle fa-inverse"></i>
                         </button>
                         <CommandeGetModal :data="this.data" />

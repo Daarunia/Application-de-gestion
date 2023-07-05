@@ -84,7 +84,7 @@ class CommandeController extends Controller
     }
 
     /**
-     * API function who fetch de data for the update command modal
+     * API function who fetch the data for the update command modal
      */
     public function getDataUpdate(ServiceController $serviceController, $id)
     {
@@ -93,6 +93,8 @@ class CommandeController extends Controller
         $commandeData = [];
 
         foreach ($services as $service) {
+            $exceptionalCase = false;
+
             foreach ($serviceController->serviceMapping as $name => $references) {
                 if (array_key_exists($service['reference'], $references)) {
                     if (isset($commandeData[$name])) {
@@ -100,11 +102,12 @@ class CommandeController extends Controller
                     } else {
                         $commandeData[$name] = $service['pivot']['quantity'];
                     }
-                } else {
-                    if (isset($commandeData[$name])) {
-                        $commandeData[$name] = $service['pivot']['quantity'];
-                    }
+                    $exceptionalCase = true;
                 }
+            }
+
+            if (!$exceptionalCase) {
+                $commandeData[$service['name']] = $service['pivot']['quantity'];
             }
         }
 
