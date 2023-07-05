@@ -16,7 +16,11 @@ export default {
     },
     data() {
         return {
-            data: {
+            getData: {
+                type: Array,
+                default: () => [],
+            },
+            updateData: {
                 type: Array,
                 default: () => [],
             },
@@ -47,7 +51,8 @@ export default {
             try {
                 axios.get(`/api/commande/details/${commandeId}`)
                     .then(response => {
-                        this.data = response.data;
+                        console.log(response.data);
+                        this.getData = response.data;
                     })
                     .catch(error => {
                         console.log(error);
@@ -60,7 +65,8 @@ export default {
             try {
                 axios.get(`/api/commande/update/${commandeId}`)
                     .then(response => {
-                        this.data = response.data;
+                        console.log(response.data);
+                        this.updateData = response.data;
                     })
                     .catch(error => {
                         console.log(error);
@@ -112,12 +118,12 @@ export default {
                             @click="fetchGetData(commande.id)">
                             <i class="fas fa-info-circle fa-inverse"></i>
                         </button>
-                        <CommandeGetModal :data="this.data" />
+                        <CommandeGetModal :getData ="this.getData" />
                         <button v-if="!commande.status" type="button" class="btn ms-4 btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#put">
+                            data-bs-target="#put" @click="fetchUpdateData(commande.id)">
                             <i class="fas fa-pencil"></i>
                         </button>
-                        <CommandePutModal :data="this.data"/>
+                        <CommandePutModal :updateData ="this.updateData"/>
                     </td>
                 </tr>
             </tbody>

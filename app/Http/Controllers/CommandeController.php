@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Commande;
 use App\Http\Controllers\ServiceController;
-use Error;
 
 class CommandeController extends Controller
 {
