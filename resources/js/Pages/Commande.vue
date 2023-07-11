@@ -123,7 +123,7 @@ export default {
                             data-bs-target="#put" @click="fetchUpdateData(commande.id)">
                             <i class="fas fa-pencil"></i>
                         </button>
-                        <CommandePutModal :updateData ="this.updateData"/>
+                        <CommandePutModal :updateData ="this.updateData" :servicesName="this.services"/>
                     </td>
                 </tr>
             </tbody>

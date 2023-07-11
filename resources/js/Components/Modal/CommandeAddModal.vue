@@ -115,7 +115,7 @@ export default {
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="putModalLabel">Nouvelle commande</h4>
+                    <h3 class="modal-title" id="putModalLabel">Nouvelle commande</h3>
                 </div>
                 <div class="modal-padding modal-body modal-add-min-height">
                     <div class="d-flex align-items-start flex-column justify-content-between ms-3 mb-3">
