@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Commande;
+use App\Models\Service;
 use App\Http\Controllers\ServiceController;
 
 class CommandeController extends Controller
@@ -93,26 +94,41 @@ class CommandeController extends Controller
 
         foreach ($services as $service) {
             $exceptionalCase = false;
-
+            /**
+             *$response = $serviceController->getPrice($commandeData['name'], $commandeData['quantity']);
+             *$priceData = $response->getData();
+             *$commandeData['price'] = $priceData->price;
+             */
             foreach ($serviceController->serviceMapping as $name => $references) {
+                $data = [];
                 if (array_key_exists($service['reference'], $references)) {
                     if (isset($commandeData[$name])) {
-                        $commandeData[$name] += $service['pivot']['quantity'];
+                        $commandeData[$name]['quantity'] += $service['pivot']['quantity'];
+                        $response = $serviceController->getPrice($name, $commandeData[$name]['quantity']);
+                        $priceData = $response->getData();
+                        $commandeData[$name]['price'] = $priceData->price;
                     } else {
-                        $commandeData[$name] = $service['pivot']['quantity'];
+                        $response = $serviceController->getPrice($service['name'], $service['pivot']['quantity']);
+                        $priceData = $response->getData();
+                        $data['price'] = $priceData->price;
+                        $data['quantity'] = $service['pivot']['quantity'];
+                        $commandeData[$name] = $data;
                     }
                     $exceptionalCase = true;
                 }
             }
 
             if (!$exceptionalCase) {
-                $commandeData[$service['name']] = $service['pivot']['quantity'];
+                $response = $serviceController->getPrice($service['name'], $service['pivot']['quantity']);
+                $priceData = $response->getData();
+                $data['price'] = $priceData->price;
+                $data['quantity'] = $service['pivot']['quantity'];
+                $commandeData[$service['name']] =  $data;
             }
         }
 
         return response()->json([
             'services' => $commandeData,
-            'total' => $commande->total,
             'date' => $commande->date
         ]);
     }

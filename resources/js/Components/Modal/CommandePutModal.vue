@@ -20,6 +20,16 @@ export default {
             default: null
         },
     },
+    data() {
+        return {
+            isAddingService: false,
+            form: {
+                categories: [],
+                totalPrice: 0,
+                commandDate: null,
+            },
+        }
+    },
     methods: {
         formatDate(date) {
             console.log(this.updateData.date);
