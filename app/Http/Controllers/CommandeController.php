@@ -94,11 +94,6 @@ class CommandeController extends Controller
 
         foreach ($services as $service) {
             $exceptionalCase = false;
-            /**
-             *$response = $serviceController->getPrice($commandeData['name'], $commandeData['quantity']);
-             *$priceData = $response->getData();
-             *$commandeData['price'] = $priceData->price;
-             */
             foreach ($serviceController->serviceMapping as $name => $references) {
                 $data = [];
                 if (array_key_exists($service['reference'], $references)) {

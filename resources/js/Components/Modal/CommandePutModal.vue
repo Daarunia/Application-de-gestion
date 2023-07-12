@@ -30,13 +30,23 @@ export default {
             },
         }
     },
+    computed: {
+        totalPrice() {
+            if (this.updateData && this.updateData.services) {
+                let totalPrice = 0;
+                for (const serviceName in this.updateData.services) {
+                    const service = this.updateData.services[serviceName];
+                    totalPrice += service.price;
+                }
+                console.log(totalPrice);
+                return totalPrice;
+            }
+            return 0;
+        },
+    },
     methods: {
         formatDate(date) {
-            console.log(this.updateData.date);
             return moment(date).format('YYYY-MM-DD');
-        },
-        totalPrice() {
-            return this.services.reduce((total, service) => total + service.price, 0);
         },
         async addService(serviceName, quantity) {
             this.isAddingService = true;
@@ -144,7 +154,7 @@ export default {
                 </div>
                 <div class="footer pt-2 footer-ligne d-flex justify-content-end align-items-center mb-2">
                     <label class="me-4">Prix :</label>
-                    <input type="number" class="form-control w-25" readonly :value="updateData?.total">
+                    <input type="number" class="form-control w-25" readonly :value="totalPrice">
                     <button type="button" class="btn btn-danger ms-4 me-2" data-bs-dismiss="modal">Fermer</button>
                 </div>
             </div>
