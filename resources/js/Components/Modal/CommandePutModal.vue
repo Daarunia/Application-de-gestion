@@ -127,7 +127,7 @@ export default {
                         <h5 class="mt-3">Services</h5>
                         <div class="horizontal-line grey-line mb-2"></div>
                         <div class="d-flex align-items-start flex-row mb-1 ms-2 mt-1 w-100"
-                            v-for="(value, key) in updateData.services" :key="key">
+                            v-for="(value, key) in updateData?.services" :key="key">
                             <input type="text" class="form-control w-50 me-5" readonly :value="key">
                             <div class="input-group w-25 ms-5">
                                 <button class="btn btn-outline-secondary" type="button"
