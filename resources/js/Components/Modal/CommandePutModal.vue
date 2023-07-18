@@ -38,7 +38,6 @@ export default {
                     const service = this.updateData.services[serviceName];
                     totalPrice += service.price;
                 }
-                console.log(totalPrice);
                 return totalPrice;
             }
             return 0;
@@ -73,25 +72,22 @@ export default {
         },
         // For incrementing the quantity of the service by 1
         async decreaseQuantity(service) {
-            if (service.quantity > 0) {
-                service.quantity--;
+            if (this.updateData.services[service].quantity > 0) {
+                this.updateData.services[service].quantity--;
                 await this.handleQuantityChange(service);
             }
         },
         // For decrementing the quantity of the service by 1
         async increaseQuantity(service) {
-            if (service.quantity < 999) {
-                service.quantity++;
+            if (this.updateData.services[service].quantity < 999) {
+                this.updateData.services[service].quantity++;
                 await this.handleQuantityChange(service);
             }
         },
         // Update the quantity of a service
         async handleQuantityChange(service) {
-            const indexNumber = this.services.findIndex(services => services.name === service.name);
-
-            let response = await this.updatePrice(service.name, service.quantity)
-            this.services[indexNumber].price = parseFloat(response.data.price);
-            console.log(this.services);
+            let response = await this.updatePrice(service, this.updateData.services[service].quantity)
+            this.updateData.services[service].price = parseFloat(response.data.price);
         },
         // Update the price accordingly when manually changing the quantity input of a service
         async updatePrice(serviceName, quantity) {
@@ -134,9 +130,12 @@ export default {
                             v-for="(value, key) in updateData.services" :key="key">
                             <input type="text" class="form-control w-50 me-5" readonly :value="key">
                             <div class="input-group w-25 ms-5">
-                                <button class="btn btn-outline-secondary" type="button">-</button>
-                                <input min="0" max="999" type="number" class="form-control text-center" :value="value">
-                                <button class="btn btn-outline-secondary" type="button">+</button>
+                                <button class="btn btn-outline-secondary" type="button"
+                                    @click="decreaseQuantity(key)">-</button>
+                                <input min="0" max="999" type="number" class="form-control text-center"
+                                    :value="value.quantity">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    @click="increaseQuantity(key)">+</button>
                             </div>
                             <button type="button" class="btn btn-danger ms-4" @click="deleteService(service)">
                                 <i class="fas fa-trash"></i>
