@@ -101,8 +101,9 @@ export default {
         },
         // Delete a specific service type from the services array for the current new command.
         deleteService(service) {
-            this.services.splice(this.services.findIndex(services => services.name === service.name), 1);
-            this.totalPrice();
+            if (this.updateData.services.hasOwnProperty(service)) {
+                delete this.updateData.services[service];
+            }
         }
     }
 }
@@ -137,7 +138,7 @@ export default {
                                 <button class="btn btn-outline-secondary" type="button"
                                     @click="increaseQuantity(key)">+</button>
                             </div>
-                            <button type="button" class="btn btn-danger ms-4" @click="deleteService(service)">
+                            <button type="button" class="btn btn-danger ms-4" @click="deleteService(key)">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
