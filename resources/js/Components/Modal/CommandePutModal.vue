@@ -50,20 +50,20 @@ export default {
         async addService(serviceName, quantity) {
             this.isAddingService = true;
             try {
-                let encodedServiceName = serviceName.replace(/\//g, "|");
-                const existingIndex = this.services.findIndex(service => service.name === serviceName);
-
                 // If the service has not been added to the command, we create it otherwise, we update the quantity and the price.
-                if (existingIndex === -1) {
-                    let response = await this.updatePrice(serviceName, quantity)
+                if (this.updateData.services.hasOwnProperty(serviceName)) {
+                    this.updateData.services[serviceName].quantity += quantity;
+                    let response = await this.updatePrice(serviceName, this.updateData.services[serviceName].quantity)
 
-                    this.services.push({ name: serviceName, quantity, price: parseFloat(response.data.price) });
+                    this.updateData.services[serviceName].price = parseFloat(response.data.price);
                     this.isAddingService = false;
                 } else {
-                    this.services[existingIndex].quantity += quantity;
-                    let response = await this.updatePrice(serviceName, this.services[existingIndex].quantity)
+                    let response = await this.updatePrice(serviceName, quantity)
 
-                    this.services[existingIndex].price = parseFloat(response.data.price);
+                    this.updateData.services[serviceName] = {
+                        quantity: quantity,
+                        price: parseFloat(response.data.price)
+                    };
                     this.isAddingService = false;
                 }
             } catch (error) {
@@ -146,7 +146,8 @@ export default {
                         <select class="form-select" v-model="selectedService">
                             <option v-for="service in servicesName">{{ service }}</option>
                         </select>
-                        <button type="button" class="btn btn-success ms-4 me-4">
+                        <button type="button" class="btn btn-success ms-4 me-4" @click="addService(selectedService, 1)"
+                            :disabled="isAddingService">
                             Ajouter
                         </button>
                     </div>
