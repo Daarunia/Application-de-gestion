@@ -34,7 +34,7 @@ export default {
             this.form.commandDate = this.date
 
             try {
-                //console.log(this.form);
+                console.log(this.form);
                 this.$inertia.post('/commandes', this.form);
                 // Re-init
                 this.services = [];

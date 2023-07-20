@@ -46,21 +46,43 @@ class CommandeController extends Controller
 
     public function update(Request $request, ServiceController $serviceController, $id)
     {
+        $serviceMapping = $serviceController->serviceMapping;
+
         $validatedData = $request->validate([
             'categories' => 'required|array',
             'date' => 'required|date',
-            'id' => 'required|numeric',
             'totalPrice' => 'required|numeric',
         ]);
 
-        // Récupérer la commande par son ID
+        // Commande data
         $commande = Commande::find($id);
-        error_log($commande->date);
-        error_log($validatedData['date']);
         $commande->date = $validatedData['date'];
-        error_log($commande->date);
         $commande->total = $validatedData['totalPrice'];
         $commande->save();
+
+        // Services data
+        foreach ($validatedData['categories'] as $key => $value) {
+            $serviceId = $serviceController->getServicesId($key, $value['quantity']);
+            // Exceptional cases
+            if (array_key_exists($key, $serviceMapping)) {
+                // delete the old service data
+                foreach ($serviceMapping as $name => $references) {
+                    foreach ($references as $reference => $maxAllowedQuantity) {
+                        if ($name === $key) {
+                            $service = Service::where('reference', $reference)->first();
+                            $commande->services()->detach($service->id);
+                        }
+                    }
+                }
+                //Add the quantity for each service in the pivot table for the current command.
+                foreach ($serviceId as $id => $quantity) {
+                    if($quantity > 0){
+                        $commande->services()->attach($id, ['quantity' => $quantity]);
+                    }
+                }
+            } else {
+            }
+        }
 
         return Inertia::render('Commande', [
             'commandes' => Commande::all(),

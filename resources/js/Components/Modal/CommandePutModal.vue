@@ -27,7 +27,6 @@ export default {
                 categories: [],
                 totalPrice: 0,
                 date: null,
-                id: 0
             },
         }
     },
@@ -57,8 +56,7 @@ export default {
     methods: {
         updateCommand() {
             this.form.categories = this.updateData.services,
-                this.form.id = this.updateData.id
-            this.form.totalPrice = this.totalPrice
+                this.form.totalPrice = this.totalPrice
 
             try {
                 console.log("/commande/" + this.updateData.id);
@@ -157,7 +155,7 @@ export default {
                                 <button class="btn btn-outline-secondary" type="button"
                                     @click="decreaseQuantity(key)">-</button>
                                 <input min="0" max="999" type="number" class="form-control text-center"
-                                    :value="value.quantity">
+                                    @input="handleQuantityChange(key)" v-model="value.quantity">
                                 <button class="btn btn-outline-secondary" type="button"
                                     @click="increaseQuantity(key)">+</button>
                             </div>
