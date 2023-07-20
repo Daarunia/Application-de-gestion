@@ -26,8 +26,19 @@ export default {
             form: {
                 categories: [],
                 totalPrice: 0,
-                commandDate: null,
+                date: null,
+                id: 0
             },
+        }
+    },
+    watch: {
+        updateData: {
+            immediate: true,
+            handler(updateData) {
+                if (updateData && updateData.date) {
+                    this.form.date = updateData.date;
+                }
+            }
         }
     },
     computed: {
@@ -44,6 +55,19 @@ export default {
         },
     },
     methods: {
+        updateCommand() {
+            this.form.categories = this.updateData.services,
+                this.form.id = this.updateData.id
+            this.form.totalPrice = this.totalPrice
+
+            try {
+                console.log("/commande/" + this.updateData.id);
+                console.log(this.form);
+                this.$inertia.put("/commande/" + this.updateData.id, this.form);
+            } catch (error) {
+                console.log(error);
+            }
+        },
         formatDate(date) {
             return moment(date).format('YYYY-MM-DD');
         },
@@ -122,8 +146,7 @@ export default {
                         <div class="horizontal-line grey-line mb-2"></div>
                         <div class="d-flex align-items-center flex-row ms-2">
                             <label class="me-4">Date de commande :</label>
-                            <flat-pickr class="form-control text-center w-50" v-model="date"
-                                :value="formatDate(updateData?.date)"></flat-pickr>
+                            <flat-pickr class="form-control text-center w-50" v-model="form.date"></flat-pickr>
                         </div>
                         <h5 class="mt-3">Services</h5>
                         <div class="horizontal-line grey-line mb-2"></div>
@@ -156,6 +179,8 @@ export default {
                 <div class="footer pt-2 footer-ligne d-flex justify-content-end align-items-center mb-2">
                     <label class="me-4">Prix :</label>
                     <input type="number" class="form-control w-25" readonly :value="totalPrice">
+                    <button type="button" class="btn btn-success ms-2" data-bs-dismiss="modal"
+                        @click.prevent="updateCommand()">Enregistrer</button>
                     <button type="button" class="btn btn-danger ms-4 me-2" data-bs-dismiss="modal">Fermer</button>
                 </div>
             </div>

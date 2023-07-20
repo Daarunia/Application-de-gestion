@@ -44,6 +44,30 @@ class CommandeController extends Controller
         ]);
     }
 
+    public function update(Request $request, ServiceController $serviceController, $id)
+    {
+        $validatedData = $request->validate([
+            'categories' => 'required|array',
+            'date' => 'required|date',
+            'id' => 'required|numeric',
+            'totalPrice' => 'required|numeric',
+        ]);
+
+        // Récupérer la commande par son ID
+        $commande = Commande::find($id);
+        error_log($commande->date);
+        error_log($validatedData['date']);
+        $commande->date = $validatedData['date'];
+        error_log($commande->date);
+        $commande->total = $validatedData['totalPrice'];
+        $commande->save();
+
+        return Inertia::render('Commande', [
+            'commandes' => Commande::all(),
+            'services' => $serviceController->getNameServices(),
+        ]);
+    }
+
     public function store(Request $request, ServiceController $serviceController)
     {
         $validatedData = $request->validate([
@@ -124,7 +148,8 @@ class CommandeController extends Controller
 
         return response()->json([
             'services' => $commandeData,
-            'date' => $commande->date
+            'date' => $commande->date,
+            'id' => $commande->id
         ]);
     }
 }
