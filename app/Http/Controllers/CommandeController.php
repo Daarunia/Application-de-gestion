@@ -81,6 +81,14 @@ class CommandeController extends Controller
                     }
                 }
             } else {
+                // Update the date for non-exceptional cases
+                $service = Service::where('name', $key)->first();
+                $commande->services()->detach($service->id);
+
+                if($value['quantity'] > 0){
+                    error_log(json_encode($value['quantity']));
+                    $commande->services()->attach($service->id, ['quantity' => $value['quantity']]);
+                }
             }
         }
 
