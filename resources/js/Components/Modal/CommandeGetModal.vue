@@ -1,9 +1,17 @@
 <script>
 import moment from 'moment';
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 
 export default {
     name: 'CommandeGetModal',
+    components: {
+        PulseLoader,
+    },
     props: {
+        isLoading: {
+            type: Boolean,
+            required: true,
+        },
         getData: {
             type: Object,
             required: true,
@@ -22,9 +30,15 @@ export default {
     <div class="modal fade" id="get" tabindex="-1" aria-labelledby="getModal" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class=" ms-5 modal-padding modal-body">
-                    <h2 class="mt-3 modal-title" id="getModalLabel">Commande</h2>
-                    <div class="horizontal-line grey-line mb-4"></div>
+                <div class="modal-header">
+                    <h2 class="modal-title" id="getModalLabel">Commande</h2>
+                </div>
+                <div v-if="isLoading" class="ms-2 modal-padding modal-body modal-add-min-height">
+                    <div class="spinner">
+                        <pulse-loader :loading="isLoading" :color="spinnerColor" :size="spinnerSize"></pulse-loader>
+                    </div>
+                </div>
+                <div v-else class=" ms-5 modal-padding modal-body">
                     <div class="mt-2 d-flex justify-content-start align-items-center">
                         <label class="me-3">Date de création :</label>
                         <input type="text" class="form-control w-25 me-4" readonly
@@ -58,10 +72,11 @@ export default {
     border: solid 0.1px #6c757d;
 }
 
-.quantity-input{
+.quantity-input {
     max-width: 100px;
-    margin-right:20%;
+    margin-right: 20%;
 }
+
 .footer-ligne {
     border-top: var(--bs-modal-header-border-width) solid var(--bs-modal-header-border-color);
 }

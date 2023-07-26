@@ -2,13 +2,19 @@
 import moment from 'moment';
 import FlatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 
 export default {
     name: 'CommandePutModal',
     components: {
-        FlatPickr
+        PulseLoader,
+        FlatPickr,
     },
     props: {
+        isLoading: {
+            type: Boolean,
+            required: true,
+        },
         updateData: {
             type: Object,
             required: true,
@@ -57,8 +63,8 @@ export default {
     methods: {
         updateCommand() {
             this.form.categories = this.updateData.services,
-            this.form.totalPrice = this.totalPrice,
-            this.form.status = this.updateData.status
+                this.form.totalPrice = this.totalPrice,
+                this.form.status = this.updateData.status
 
             try {
                 console.log(this.form);
@@ -142,7 +148,12 @@ export default {
                 <div class="modal-header">
                     <h3 class="modal-title" id="putModalLabel">Mise à jour d'une commande</h3>
                 </div>
-                <div class="ms-2 modal-padding modal-body modal-add-min-height">
+                <div v-if="isLoading" class="ms-2 modal-padding modal-body modal-add-min-height">
+                    <div class="spinner">
+                        <pulse-loader :loading="isLoading" :color="spinnerColor" :size="spinnerSize"></pulse-loader>
+                    </div>
+                </div>
+                <div v-else class="ms-2 modal-padding modal-body modal-add-min-height">
                     <div class="d-flex align-items-start flex-column justify-content-between ms-3 mb-3">
                         <h5 class="mt-3">Informations de commande</h5>
                         <div class="horizontal-line grey-line mb-2"></div>
@@ -152,7 +163,8 @@ export default {
                                 <flat-pickr class="form-control text-center w-50" v-model="form.date"></flat-pickr>
                             </div>
                             <label class="me-4">Status :</label>
-                            <button @click="toggleLock" :class="this.updateData?.status ? 'btn btn-danger' : 'btn btn-primary'">
+                            <button @click="toggleLock"
+                                :class="this.updateData?.status ? 'btn btn-danger' : 'btn btn-primary'">
                                 <i :class="this.updateData?.status ? 'fas fa-lock' : 'fas fa-unlock'"></i>
                             </button>
                         </div>
@@ -195,3 +207,12 @@ export default {
         </div>
     </div>
 </template>
+
+<style>
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+</style>

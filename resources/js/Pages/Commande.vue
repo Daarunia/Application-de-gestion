@@ -16,6 +16,7 @@ export default {
     },
     data() {
         return {
+            isLoading: false,
             getData: {
                 type: Array,
                 default: () => [],
@@ -45,6 +46,8 @@ export default {
             }
         },
         fetchGetData(commandeId) {
+            this.isLoading = true;
+
             try {
                 axios.get(`/api/commande/details/${commandeId}`)
                     .then(response => {
@@ -53,25 +56,33 @@ export default {
                     })
                     .catch(error => {
                         console.log(error);
+                    })
+                    .finally(() => {
+                        this.isLoading = false;
                     });
             } catch (error) {
                 console.error(error);
             }
         },
         fetchUpdateData(commandeId) {
-                try {
-                    axios.get(`/api/commande/update/${commandeId}`)
-                        .then(response => {
-                            console.log(response.data);
-                            this.updateData = response.data;
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        });
-                } catch (error) {
-                    console.error(error);
-                }
+            this.isLoading = true;
+
+            try {
+                axios.get(`/api/commande/update/${commandeId}`)
+                    .then(response => {
+                        console.log(response.data);
+                        this.updateData = response.data;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        this.isLoading = false;
+                    });
+            } catch (error) {
+                console.error(error);
             }
+        }
     },
 };
 </script>
@@ -115,12 +126,13 @@ export default {
                             @click="fetchGetData(commande.id)">
                             <i class="fas fa-info-circle fa-inverse"></i>
                         </button>
-                        <CommandeGetModal :getData="this.getData" />
+                        <CommandeGetModal :isLoading="this.isLoading" :getData="this.getData" />
                         <button v-if="!commande.status" type="button" class="btn ms-4 btn-primary" data-bs-toggle="modal"
                             data-bs-target="#put" @click="fetchUpdateData(commande.id)">
                             <i class="fas fa-pencil"></i>
                         </button>
-                        <CommandePutModal :updateData="this.updateData" :servicesName="this.services" />
+                        <CommandePutModal :isLoading="this.isLoading" :updateData="this.updateData"
+                            :servicesName="this.services" />
                     </td>
                 </tr>
             </tbody>
