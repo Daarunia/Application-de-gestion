@@ -52,12 +52,14 @@ class CommandeController extends Controller
             'categories' => 'required|array',
             'date' => 'required|date',
             'totalPrice' => 'required|numeric',
+            'status' => 'required|boolean'
         ]);
 
         // Commande data
         $commande = Commande::find($id);
         $commande->date = $validatedData['date'];
         $commande->total = $validatedData['totalPrice'];
+        $commande->status = $validatedData['status'];
         $commande->save();
 
         // Services data
@@ -104,6 +106,7 @@ class CommandeController extends Controller
             'categories' => 'required|array',
             'totalPrice' => 'required|numeric',
             'commandDate' => 'required|date',
+            'status' => 'required|boolean'
         ]);
 
         // Generate the new reference
@@ -119,7 +122,7 @@ class CommandeController extends Controller
         $commande = Commande::create([
             'total' => $validatedData['totalPrice'],
             'date' => $validatedData['commandDate'],
-            'status' => true,
+            'status' => $validatedData['status'],
             'reference' => $newReference,
         ]);
 
@@ -179,7 +182,8 @@ class CommandeController extends Controller
         return response()->json([
             'services' => $commandeData,
             'date' => $commande->date,
-            'id' => $commande->id
+            'id' => $commande->id,
+            'status' => $commande-> status
         ]);
     }
 }

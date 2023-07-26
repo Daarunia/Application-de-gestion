@@ -59,7 +59,6 @@ export default {
             }
         },
         fetchUpdateData(commandeId) {
-            if (!this.updateData) {
                 try {
                     axios.get(`/api/commande/update/${commandeId}`)
                         .then(response => {
@@ -73,7 +72,6 @@ export default {
                     console.error(error);
                 }
             }
-        }
     },
 };
 </script>

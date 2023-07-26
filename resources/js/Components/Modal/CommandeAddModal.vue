@@ -21,6 +21,7 @@ export default {
             date: ref('2023-06-28'),
             isAddingService: false,
             form: {
+                status: false,
                 categories: [],
                 totalPrice: 0,
                 commandDate: null,
@@ -105,7 +106,10 @@ export default {
         deleteService(service) {
             this.services.splice(this.services.findIndex(services => services.name === service.name), 1);
             this.totalPrice();
-        }
+        },
+        toggleLock() {
+            this.form.status = !this.form.status;
+        },
     },
 }
 </script>
@@ -119,11 +123,17 @@ export default {
                 </div>
                 <div class="modal-padding modal-body modal-add-min-height">
                     <div class="d-flex align-items-start flex-column justify-content-between ms-3 mb-3">
-                        <h5 class="mt-3">Date</h5>
+                        <h5 class="mt-3">Informations de commande</h5>
                         <div class="horizontal-line grey-line mb-2"></div>
-                        <div class="d-flex align-items-center flex-row ms-2">
-                            <label class="me-4">Date de commande :</label>
-                            <flat-pickr class="form-control text-center w-50" v-model="date"></flat-pickr>
+                        <div class="d-flex align-items-center flex-row">
+                            <div class="d-flex align-items-center flex-row ms-2">
+                                <label class="me-3">Date :</label>
+                                <flat-pickr class="form-control text-center w-50" v-model="date"></flat-pickr>
+                            </div>
+                            <label class="me-4">Status :</label>
+                            <button @click="toggleLock" :class="form.status ? 'btn btn-danger' : 'btn btn-primary'">
+                                <i :class="form.status ? 'fas fa-lock' : 'fas fa-unlock'"></i>
+                            </button>
                         </div>
                         <h5 class="mt-3">Services</h5>
                         <div class="horizontal-line grey-line mb-2"></div>
