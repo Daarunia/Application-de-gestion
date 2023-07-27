@@ -88,7 +88,6 @@ class CommandeController extends Controller
                 $commande->services()->detach($service->id);
 
                 if($value['quantity'] > 0){
-                    error_log(json_encode($value['quantity']));
                     $commande->services()->attach($service->id, ['quantity' => $value['quantity']]);
                 }
             }

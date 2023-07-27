@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('date');
             $table->decimal('total', 8, 2);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -63,8 +63,8 @@ export default {
     methods: {
         updateCommand() {
             this.form.categories = this.updateData.services,
-                this.form.totalPrice = this.totalPrice,
-                this.form.status = this.updateData.status
+            this.form.totalPrice = this.totalPrice,
+            this.form.status = this.updateData.status
 
             try {
                 console.log(this.form);
@@ -78,6 +78,8 @@ export default {
         },
         async addService(serviceName, quantity) {
             this.isAddingService = true;
+            console.log(this.updateData);
+
             try {
                 // If the service has not been added to the command, we create it otherwise, we update the quantity and the price.
                 if (this.updateData.services.hasOwnProperty(serviceName)) {
@@ -122,6 +124,7 @@ export default {
         async updatePrice(serviceName, quantity) {
             let encodedServiceName = serviceName.replace(/\//g, "|");
             try {
+                console.log(`/api/service/${encodedServiceName}/${quantity}`);
                 return await axios.get(`/api/service/${encodedServiceName}/${quantity}`);
             } catch (error) {
                 console.log(error);
